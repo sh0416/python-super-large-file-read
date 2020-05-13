@@ -57,7 +57,19 @@ print("TIME: %f" % (e - s))
 Compressed file gives about 9 min. However, uncompressed file gives about 4 min.  
 
 Q. Is 4min the peak read performance?  
-A. 374 (MB/s) * 240 (s) = 89760 (MB) = 87.6562 (GB). I think it is peak performance.  
+A. 374 (MB/s) * 240 (s) = 89760 (MB) = 87.6562 (GB). I think it is peak performance.
+In retrospect, I think it could be CPU bound because I assume that all cache miss which
+is unnatural although it is sequential access. The other clue is the performance of `wl`
+command in Linux. It just takes 5 seconds! There are some magical implementation to count
+the number of line without reading, but it seems not (if it is, then the execution time might
+be ~50ms).
+
+Q. Possability of using `mmap`?  
+A. For now, I'm not using mmap. Maybe, it could improve the performance, but I hesitate to use it
+because I am not confident about the technique. memory-mapped could raise an issue about consistency
+which is the aspect I want to avoid the most. If I am ready to use mmap using python, I will add it
+in the following experiment.
+
 Q. Why the compressed version takes so long?  
 A. Maybe, since there is no operation in the forloop, uncompressed processing
 could not hide by other works (e.g. pipeline). If there are some operations in the forloop,
